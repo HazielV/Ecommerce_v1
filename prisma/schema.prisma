@@ -1,0 +1,227 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Persona {
+  id              Int       @id @default(autoincrement())
+  nombres         String
+  primerapellido  String
+  segundoapellido String?
+  fechanacimiento DateTime?
+  celular         String?
+  nrodocumento    Int       @unique
+  sexo            String?
+  estado          Estado?   @relation(fields: [estadoId], references: [id])
+  estadoId        Int?      @default(1)
+  usuario         Usuario?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  Delivery        Delivery? @relation(fields: [deliveryId], references: [id])
+  deliveryId      Int?
+}
+
+model Usuario {
+  id                Int       @id @default(autoincrement())
+  correoelectronico String    @unique
+  password          String?
+  estado            Estado?   @relation(fields: [estadoId], references: [id])
+  estadoId          Int?      @default(1)
+  persona           Persona?  @relation(fields: [personaId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  personaId         Int       @unique
+  foto              String?
+  rol               Rol
+  cliente           Cliente?
+  artesano          Artesano?
+  delivery          Delivery?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+}
+
+model Empresa {
+  id         Int        @id @default(autoincrement())
+  nombre     String
+  ubicacion  String
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  Delivery   Delivery[]
+  estado     Estado?    @relation(fields: [estadoId], references: [id])
+  estadoId   Int?       @default(1)
+}
+
+model Delivery {
+  id         Int       @id @default(autoincrement())
+  empresa    Empresa?  @relation(fields: [empresaId], references: [id])
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  usuario    Usuario?  @relation(fields: [usuarioId], references: [id])
+  usuarioId  Int       @unique
+  empresaId  Int
+  estado     Estado?   @relation(fields: [estadoId], references: [id])
+  estadoId   Int?      @default(1)
+  Persona    Persona[]
+}
+
+enum Rol {
+  ADMINISTRADOR
+  ARTESANO
+  CLIENTE
+  DELIVERY
+}
+
+model Artesano {
+  id          Int        @id @default(autoincrement())
+  usuario     Usuario?   @relation(fields: [usuarioId], references: [id])
+  usuarioId   Int        @unique
+  productos   Producto[]
+  estado      Estado?    @relation(fields: [estadoId], references: [id])
+  estadoId    Int?       @default(1)
+  comunidad   Comunidad? @relation(fields: [comunidadId], references: [id])
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+  comunidadId Int
+}
+
+model Comunidad {
+  id         Int        @id @default(autoincrement())
+  nombre     String
+  ubicacion  String
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  Artesano   Artesano[]
+  estado     Estado?    @relation(fields: [estadoId], references: [id])
+  estadoId   Int?       @default(1)
+}
+
+model Cliente {
+  id          Int        @id @default(autoincrement())
+  usuario     Usuario?   @relation(fields: [usuarioId], references: [id])
+  estado      Estado?    @relation(fields: [estadoId], references: [id])
+  estadoId    Int?       @default(1)
+  listaDeseos Producto[]
+  orden       Orden[]
+  usuarioId   Int?       @unique
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+}
+
+model Categoria {
+  id          Int        @id @default(autoincrement())
+  nombre      String
+  descripcion String
+  productos   Producto[]
+  estado      Estado?    @relation(fields: [estadoId], references: [id])
+  estadoId    Int?       @default(1)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+}
+
+model Producto {
+  id            Int               @id @default(autoincrement())
+  nombre        String
+  descripcion   String
+  precio        Int
+  categoria     Categoria         @relation(fields: [categoriaId], references: [id])
+  categoriaId   Int
+  estado        Estado?           @relation(fields: [estadoId], references: [id])
+  estadoId      Int?              @default(1)
+  listaDeseosId Int?
+  detalles      DetalleProducto[]
+  created_at    DateTime          @default(now())
+  updated_at    DateTime          @updatedAt
+  Artesano      Artesano?         @relation(fields: [artesanoId], references: [id])
+  artesanoId    Int?
+  Cliente       Cliente?          @relation(fields: [clienteId], references: [id])
+  clienteId     Int?
+  OrdenItems    OrdenItems[]
+  Almacen       Almacen[]
+}
+
+model DetalleProducto {
+  id          Int     @id @default(autoincrement())
+  estado      Estado? @relation(fields: [estadoId], references: [id])
+  estadoId    Int?    @default(1)
+  titulo      String
+  descripcion String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  Producto   Producto? @relation(fields: [productoId], references: [id])
+  productoId Int?
+}
+
+model Orden {
+  id          Int          @id @default(autoincrement())
+  items       OrdenItems[]
+  estado      Estado?      @relation(fields: [estadoId], references: [id])
+  estadoId    Int?         @default(1)
+  Cliente     Cliente?     @relation(fields: [clienteId], references: [id])
+  clienteId   Int?
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  DetallePago DetallePago?
+}
+
+model OrdenItems {
+  id         Int      @id @default(autoincrement())
+  estado     Estado?  @relation(fields: [estadoId], references: [id])
+  estadoId   Int?     @default(1)
+  producto   Producto @relation(fields: [productoId], references: [id])
+  cantidad   Int
+  orden      Orden?   @relation(fields: [ordenId], references: [id])
+  ordenId    Int?
+  productoId Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model DetallePago {
+  id         Int      @id @default(autoincrement())
+  estado     Estado?  @relation(fields: [estadoId], references: [id])
+  estadoId   Int?     @default(1)
+  orden      Orden    @relation(fields: [ordenId], references: [id])
+  total      Int
+  proveedor  String
+  ordenId    Int      @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Estado {
+  id              Int               @id @default(autoincrement())
+  descripcion     String
+  Persona         Persona[]
+  Usuario         Usuario[]
+  Artesano        Artesano[]
+  Cliente         Cliente[]
+  Categoria       Categoria[]
+  Producto        Producto[]
+  Orden           Orden[]
+  OrdenItems      OrdenItems[]
+  DetallePago     DetallePago[]
+  Almacen         Almacen[]
+  DetalleProducto DetalleProducto[]
+  Empresa         Empresa[]
+  Delivery        Delivery[]
+  Comunidad       Comunidad[]
+}
+
+model Almacen {
+  id            Int      @id @default(autoincrement())
+  producto      Producto @relation(fields: [productoId], references: [id])
+  productoId    Int
+  cantidad      Int
+  proveedor     String?
+  precio_compra Int
+  estado        Estado?  @relation(fields: [estadoId], references: [id])
+  estadoId      Int?     @default(1)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}
