@@ -21,6 +21,7 @@ export default function LoginForm() {
   )
   const router = useRouter()
   const enviar = async (e: React.FormEvent<HTMLFormElement>) => {
+    setErrores(null)
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
     const response = await fetch('http://localhost:3000/api/login', {
@@ -37,6 +38,7 @@ export default function LoginForm() {
     }
     const result = await response.json()
     router.push(result.redirect)
+    router.refresh()
   }
 
   return (

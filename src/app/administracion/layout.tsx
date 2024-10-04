@@ -13,7 +13,7 @@ export default async function RootLayout({
     <div className="flex w-screen  h-screen">
       <Sidebar rol={session.rol || 'ADMNISTRADOR'} />
       <main className="flex-1 bg-[#FBFBFB]  h-screen flex flex-col overflow-hidden">
-        <Header />
+        <Header session={session} />
         {children}
       </main>
     </div>

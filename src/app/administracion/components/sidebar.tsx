@@ -72,10 +72,10 @@ const generarMenus = (rol: string) => {
     })
     menus.push({
       id: 6,
-      descripcion: 'Almacen',
+      descripcion: 'Almacenes',
       icono: 'Container',
-      path: 'almacen',
-      url: '/administracion/almacen',
+      path: 'almacenes',
+      url: '/administracion/almacenes',
     })
   }
 

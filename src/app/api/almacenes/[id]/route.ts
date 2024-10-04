@@ -10,14 +10,14 @@ type Params = {
 export async function GET(req: Request, context: { params: Params }) {
   const id = Number(context.params.id) | 0
   try {
-    const data = await prisma.categoria.findUnique({
+    const data = await prisma.almacen.findUnique({
       where: {
         id: id,
       },
       select: {
         id: true,
         nombre: true,
-        descripcion: true,
+        direccion: true,
         estado: true,
       },
     })
@@ -34,13 +34,13 @@ export async function PUT(req: Request, context: { params: Params }) {
   const data = await req.formData()
   const id = Number(context.params.id) | 0
   try {
-    await prisma.categoria.update({
+    await prisma.almacen.update({
       where: {
         id: id,
       },
       data: {
         nombre: data.get('nombre') as string,
-        descripcion: data.get('descripcion') as string,
+        direccion: data.get('direccion') as string,
       },
     })
   } catch (error) {
@@ -49,8 +49,8 @@ export async function PUT(req: Request, context: { params: Params }) {
   } finally {
     prisma.$disconnect()
   }
-  revalidatePath('/administracion/categorias')
-  return NextResponse.json({ redirect: '/administracion/categorias' })
+  revalidatePath('/administracion/almacenes')
+  return NextResponse.json({ redirect: '/administracion/almacenes' })
 }
 export async function DELETE(req: Request, context: { params: Params }) {
   const id = Number(context.params.id) | 0
@@ -60,7 +60,7 @@ export async function DELETE(req: Request, context: { params: Params }) {
       { status: 400 }
     ) */
   try {
-    await prisma.categoria.update({
+    await prisma.almacen.update({
       where: {
         id: id,
       },
@@ -78,8 +78,8 @@ export async function DELETE(req: Request, context: { params: Params }) {
   } finally {
     prisma.$disconnect()
   }
-  revalidatePath('/administracion/categorias')
-  return NextResponse.json({ redirect: '/administracion/categorias' })
+  revalidatePath('/administracion/almacenes')
+  return NextResponse.json({ redirect: '/administracion/almacenes' })
 }
 export async function PATCH(req: Request, context: { params: Params }) {
   const id = Number(context.params.id) | 0
@@ -89,7 +89,7 @@ export async function PATCH(req: Request, context: { params: Params }) {
         { status: 400 }
       ) */
   try {
-    await prisma.categoria.update({
+    await prisma.almacen.update({
       where: {
         id: id,
       },
@@ -107,6 +107,6 @@ export async function PATCH(req: Request, context: { params: Params }) {
   } finally {
     prisma.$disconnect()
   }
-  revalidatePath('/administracion/categorias')
-  return NextResponse.json({ redirect: '/administracion/categorias' })
+  revalidatePath('/administracion/almacenes')
+  return NextResponse.json({ redirect: '/administracion/almacenes' })
 }

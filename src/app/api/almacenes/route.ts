@@ -8,11 +8,11 @@ import { getSession } from '@/lib/auth'
 
 export async function GET() {
   try {
-    const data = await prisma.categoria.findMany({
+    const data = await prisma.almacen.findMany({
       select: {
         id: true,
         nombre: true,
-        descripcion: true,
+        direccion: true,
         estado: true,
       },
       orderBy: {
@@ -37,10 +37,10 @@ export async function POST(req: Request) {
     { status: 400 }
   ) */
   try {
-    await prisma.categoria.create({
+    await prisma.almacen.create({
       data: {
         nombre: data.get('nombre') as string,
-        descripcion: data.get('descripcion') as string,
+        direccion: data.get('direccion') as string,
       },
     })
   } catch (error) {
@@ -49,6 +49,6 @@ export async function POST(req: Request) {
   } finally {
     prisma.$disconnect()
   }
-  revalidatePath('/administracion/categorias')
-  return NextResponse.json({ redirect: '/administracion/categorias' })
+  revalidatePath('/administracion/almacenes')
+  return NextResponse.json({ redirect: '/administracion/almacenes' })
 }

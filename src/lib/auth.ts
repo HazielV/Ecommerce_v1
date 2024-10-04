@@ -28,7 +28,6 @@ export async function getSession() {
 }
 export async function logout() {
   cookies().set('session', '', { expires: new Date(0) })
-  redirect(`/login`)
 }
 export async function login(formData: FormData) {
   // Validate form fields

@@ -12,8 +12,9 @@ import {
 } from '@/components/ui/dropdown-menu'
 import Lucide_Icon from '@/components/lucide_icono'
 import Link from 'next/link'
+import { getSession } from '@/lib/auth'
 
-export default function Header() {
+export default function Header({ session }: { session: any }) {
   const { toggle } = useSidebarStore()
   return (
     <div className="w-full h-[68px] bg-white shadow-md px-5 py-3.5 flex justify-between z-20">
@@ -23,12 +24,18 @@ export default function Header() {
 
       <DropdownMenu dir="ltr">
         <DropdownMenuTrigger>
-          <div className="rounded-full grid place-content-center h-10 w-10 bg-indigo-500 hover:bg-indigo-600 text-white font-medium">
-            HE
+          <div className="rounded-full grid place-content-center h-10 w-10 bg-indigo-500 hover:bg-indigo-600 text-white font-medium ">
+            <div className="flex uppercase">
+              <span>{session ? session.nombres.at(0) : 'NN'}</span>
+              <span>{session && session.primerapellido.at(0)}</span>
+            </div>
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="mr-5 w-48">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel className="capitalize flex gap-1">
+            <span>{session ? session.nombres : 'Cuenta'}</span>
+            <span>{session && session.primerapellido}</span>
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <Link href={'/'}>
             <DropdownMenuItem>Inicio</DropdownMenuItem>
@@ -36,9 +43,7 @@ export default function Header() {
           <Link href={'/administracion'}>
             <DropdownMenuItem>Administracion</DropdownMenuItem>
           </Link>
-          <Link href={'/perfil'}>
-            <DropdownMenuItem>Team</DropdownMenuItem>
-          </Link>
+
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <form

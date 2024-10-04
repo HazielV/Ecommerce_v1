@@ -1,7 +1,7 @@
 import EditForm from './EditForm'
 
 const getItem = async (id: number) => {
-  const response = await fetch(`http://localhost:3000/api/categorias/${id}`, {
+  const response = await fetch(`http://localhost:3000/api/almacenes/${id}`, {
     method: 'GET',
     cache: 'no-store',
   })

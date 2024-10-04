@@ -11,7 +11,15 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { FormEvent, useState } from 'react'
-
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import {
   LucideArrowLeft,
   LucideMoveLeft,
@@ -27,29 +35,17 @@ import { Textarea } from '@/components/ui/textarea'
 import InputGroup from '@/components/InputGroup'
 import InputTextArea from '@/components/InputTextArea'
 
-export default function EditForm({
-  item,
-}: {
-  item: {
-    id: number
-    nombre: string
-    descripcion: string
-  } | null
-}) {
+export default function CreateForm() {
   const router = useRouter()
   const [errores, setErrores] = useState<Record<string, string[]> | null>(null)
   const enviar = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-
-    const response = await fetch(
-      `http://localhost:3000/api/categorias/${String(item?.id)}`,
-      {
-        method: 'PUT',
-        body: formData,
-      }
-    )
-
+    const response = await fetch('http://localhost:3000/api/almacenes/', {
+      method: 'POST',
+      body: formData,
+    })
+    console.log(formData)
     if (response.status >= 400) {
       // Devolvemos un error que puede ser manejado
       const error = await response.json()
@@ -68,7 +64,7 @@ export default function EditForm({
     >
       <div className="flex-1 p-8 pt-10 flex flex-col gap-5">
         <div className="flex justify-between">
-          <h1 className="text-3xl font-medium ">Editar Categoria</h1>
+          <h1 className="text-3xl font-medium ">Nuevo Almacen</h1>
           <Button
             type="button"
             onClick={() => router.back()}
@@ -83,7 +79,7 @@ export default function EditForm({
           <Card className="md:col-span-3 w-full">
             <CardHeader>
               <CardTitle className="font-medium text-lg">
-                Datos de la categoria
+                Datos del almacen
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -94,36 +90,14 @@ export default function EditForm({
                   placeholder="Ingrese el nombre de la categoria"
                   label="Nombre"
                   error={errores}
-                  defaultValue={item?.nombre}
                 />
-                <InputTextArea
-                  name="descripcion"
-                  id="descripcion"
-                  placeholder="Descripcion de la categoria"
-                  label="Descripcion"
+                <InputGroup
+                  name="direccion"
+                  id="direccion"
+                  placeholder="Direccion de la categoria"
+                  label="Direccion"
                   error={errores}
-                  defaultValue={item?.descripcion}
                 />
-                {/* <div className="grid w-full items-center gap-1.5 md:col-span-2">
-                  <Label htmlFor="nombre">Nombre</Label>
-                  <Input
-                    type="text"
-                    id="nombre"
-                    name="nombre"
-                    placeholder="Nombre"
-                    required
-                  />
-                </div> */}
-
-                {/* <div className="grid w-full items-center md:col-span-2 gap-1.5">
-                  <Label htmlFor="descripcion">Descripcion</Label>
-                  <Textarea
-                    id="descripcion"
-                    name="descripcion"
-                    placeholder="Descripcion del producto"
-                    required
-                  />
-                </div> */}
               </div>
             </CardContent>
           </Card>

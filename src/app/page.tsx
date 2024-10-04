@@ -11,6 +11,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
 import { getSession } from '@/lib/auth'
+import { ThemeButton } from '@/components/themeButton'
+import ProfileButton from '@/components/ProfileButton'
 
 interface UserPayload {
   nombres?: string
@@ -39,44 +41,7 @@ export default async function Home() {
         </div>
 
         <div className="flex ">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild className="outline-none ">
-              <Button variant={'ghost'} className=" h-auto">
-                <Lucide_Icon name="User" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-40">
-              <DropdownMenuLabel className="capitalize flex gap-1">
-                <span>{session ? session.nombres : 'Cuenta'}</span>
-                <span>{session && session.primerapellido}</span>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <Link href={'/'}>
-                <DropdownMenuItem>Perfil</DropdownMenuItem>
-              </Link>
-              <Link href={'/pedidos'}>
-                <DropdownMenuItem>Pedidos</DropdownMenuItem>
-              </Link>
-              <Link href={'/administracion'}>
-                <DropdownMenuItem>Administracion</DropdownMenuItem>
-              </Link>
-              <Link href={'/administracion/productos'}>
-                <DropdownMenuItem>Productos</DropdownMenuItem>
-              </Link>
-              <DropdownMenuSeparator />
-              {!session && (
-                <DropdownMenuItem className="">
-                  <Link href={'login'}>Ingresar</Link>
-                </DropdownMenuItem>
-              )}
-              {!session && (
-                <DropdownMenuItem>
-                  <Link href={'singin'}>Registrarse</Link>
-                </DropdownMenuItem>
-              )}
-              {session && <DropdownMenuItem>Cerrar sesion</DropdownMenuItem>}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <ProfileButton session={session} />
 
           <div className="p-2">
             <Lucide_Icon name="ShoppingCart" />

@@ -1,7 +1,7 @@
-import EditForm from './EditForm'
+import Productos from './productos'
 
 const getItem = async (id: number) => {
-  const response = await fetch(`http://localhost:3000/api/categorias/${id}`, {
+  const response = await fetch(`http://localhost:3000/api/almacenes/${id}`, {
     method: 'GET',
     cache: 'no-store',
   })
@@ -14,5 +14,5 @@ const getItem = async (id: number) => {
 }
 export default async function page({ params }: { params: { id: string } }) {
   const item = await getItem(Number(params.id))
-  return <EditForm item={item} />
+  return <Productos item={item} />
 }

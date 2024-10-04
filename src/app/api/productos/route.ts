@@ -111,13 +111,7 @@ export async function POST(req: Request) {
             id: Number(data.get('categoria_id')),
           },
         },
-        Almacen: {
-          create: {
-            cantidad: Number(data.get('cantidad')),
-            precio_compra: Number(data.get('costo')),
-            proveedor: 'propio',
-          },
-        },
+
         detalles: {
           createMany: {
             data: [...detalles],

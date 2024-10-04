@@ -13,10 +13,11 @@ export default function InputGroup({
   id,
   name = '',
   children,
+  className,
   ...rest
 }: props) {
   return (
-    <div className="flex flex-col space-y-1.5 md:col-span-2 relative">
+    <div className={'flex flex-col space-y-1.5 relative ' + className}>
       <Label htmlFor={id}>{label}</Label>
       <Input
         {...rest}

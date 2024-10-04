@@ -141,7 +141,7 @@ model Producto {
   Cliente       Cliente?          @relation(fields: [clienteId], references: [id])
   clienteId     Int?
   OrdenItems    OrdenItems[]
-  Almacen       Almacen[]
+  AlmacenItem   AlmacenItem[]
 }
 
 model DetalleProducto {
@@ -211,17 +211,31 @@ model Estado {
   Empresa         Empresa[]
   Delivery        Delivery[]
   Comunidad       Comunidad[]
+  AlmacenItem     AlmacenItem[]
 }
 
 model Almacen {
+  id         Int           @id @default(autoincrement())
+  nombre     String
+  direccion  String
+  items      AlmacenItem[]
+  estado     Estado?       @relation(fields: [estadoId], references: [id])
+  estadoId   Int?          @default(1)
+  created_at DateTime      @default(now())
+  updated_at DateTime      @updatedAt
+}
+
+model AlmacenItem {
   id            Int      @id @default(autoincrement())
   producto      Producto @relation(fields: [productoId], references: [id])
-  productoId    Int
-  cantidad      Int
-  proveedor     String?
-  precio_compra Int
   estado        Estado?  @relation(fields: [estadoId], references: [id])
+  cantidad      Int
+  precio_compra Int
   estadoId      Int?     @default(1)
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
+
+  productoId Int
+  Almacen    Almacen? @relation(fields: [almacenId], references: [id])
+  almacenId  Int?
 }

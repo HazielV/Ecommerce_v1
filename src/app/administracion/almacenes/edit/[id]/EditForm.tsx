@@ -33,7 +33,11 @@ export default function EditForm({
   item: {
     id: number
     nombre: string
-    descripcion: string
+    direccion: string
+    estado: {
+      id: number
+      descripcion: string
+    } | null
   } | null
 }) {
   const router = useRouter()
@@ -43,7 +47,7 @@ export default function EditForm({
     const formData = new FormData(e.currentTarget)
 
     const response = await fetch(
-      `http://localhost:3000/api/categorias/${String(item?.id)}`,
+      `http://localhost:3000/api/almacenes/${String(item?.id)}`,
       {
         method: 'PUT',
         body: formData,
@@ -68,7 +72,7 @@ export default function EditForm({
     >
       <div className="flex-1 p-8 pt-10 flex flex-col gap-5">
         <div className="flex justify-between">
-          <h1 className="text-3xl font-medium ">Editar Categoria</h1>
+          <h1 className="text-3xl font-medium ">Editar Almacen</h1>
           <Button
             type="button"
             onClick={() => router.back()}
@@ -83,7 +87,7 @@ export default function EditForm({
           <Card className="md:col-span-3 w-full">
             <CardHeader>
               <CardTitle className="font-medium text-lg">
-                Datos de la categoria
+                Datos del Almacen
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -96,13 +100,13 @@ export default function EditForm({
                   error={errores}
                   defaultValue={item?.nombre}
                 />
-                <InputTextArea
-                  name="descripcion"
-                  id="descripcion"
-                  placeholder="Descripcion de la categoria"
-                  label="Descripcion"
+                <InputGroup
+                  name="direccion"
+                  id="direccion"
+                  placeholder="Direccion de la categoria"
+                  label="Direccion"
                   error={errores}
-                  defaultValue={item?.descripcion}
+                  defaultValue={item?.direccion}
                 />
                 {/* <div className="grid w-full items-center gap-1.5 md:col-span-2">
                   <Label htmlFor="nombre">Nombre</Label>

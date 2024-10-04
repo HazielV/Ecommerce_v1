@@ -39,6 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { getSession } from '@/lib/auth'
 
 export default function Page() {
   return (

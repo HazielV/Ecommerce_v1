@@ -280,7 +280,7 @@ export default function CreateForm({ categorias }: { categorias: any[] }) {
               </Button>
             </CardFooter>
           </Card>
-          <Card className="md:col-span-2 w-full">
+          {/* <Card className="md:col-span-2 w-full">
             <CardHeader>
               <CardTitle className="font-medium text-lg">Inventario</CardTitle>
             </CardHeader>
@@ -308,7 +308,7 @@ export default function CreateForm({ categorias }: { categorias: any[] }) {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
       <div className="flex sticky bottom-0 bg-white justify-end w-full md:col-span-2  text-sm px-4 py-4 border-t">

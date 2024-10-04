@@ -292,7 +292,10 @@ export default async function Home() {
         {/* seccion */}
         <div className="flex-1  bg-[#FAFAFA] p-5 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 place-items-start">
           {productos.map((elem) => (
-            <div className="rounded-xl flex flex-col overflow-hidden  shadow-sm hover:shadow-md cursor-default ">
+            <div
+              key={elem.id}
+              className="rounded-xl flex flex-col overflow-hidden  shadow-sm hover:shadow-md cursor-default "
+            >
               <div className="p-2 bg-[#F2F2F2]">
                 <img
                   className="object-cover"

@@ -46,7 +46,7 @@ export default function CreateForm() {
     }
     const result = await response.json()
     router.push(result.redirect)
-    /* router.refresh() */
+    router.refresh()
   }
 
   return (
