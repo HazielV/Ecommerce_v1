@@ -94,7 +94,7 @@ export default async function page() {
                 <TableHead className="hidden sm:table-cell">
                   Categoria
                 </TableHead>
-                <TableHead className="hidden sm:table-cell">Stock</TableHead>
+                {/* <TableHead className="hidden sm:table-cell">Stock</TableHead> */}
                 <TableHead className="hidden sm:table-cell">Estado</TableHead>
                 <TableHead className="sm:table-cell">Actions</TableHead>
               </TableRow>
@@ -119,10 +119,10 @@ export default async function page() {
                     <TableCell className="hidden sm:table-cell">
                       {producto.categoria.nombre}
                     </TableCell>
-                    <TableCell className="hidden sm:table-cell">
+                    {/* <TableCell className="hidden sm:table-cell">
                       {producto.Inventario.at(-1)?.cantidad}
                       {' unidades'}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell className="hidden sm:table-cell">
                       <Badge className="text-xs" variant="default">
                         {producto.estado?.descripcion}

@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
+import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -18,7 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { FormEvent, useState } from 'react'
+import { FormEvent, Fragment, useState } from 'react'
 import {
   Select,
   SelectContent,
@@ -60,10 +62,26 @@ const useDetalleState = (): DetalleState => {
 
 export default function CreateForm({ categorias }: { categorias: any[] }) {
   const [detalles, adicionarDetalle, eliminarElemento] = useDetalleState()
+  const [images, setImages] = useState<{ preview: string; file: File }[]>([])
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || [])
+
+    const newImages = files.map((file) => ({
+      preview: URL.createObjectURL(file), // URL de previsualización
+      file, // Archivo original
+    }))
+
+    setImages((prevImages) => [...prevImages, ...newImages])
+  }
   const router = useRouter()
   const enviar = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
     const formData = new FormData(e.currentTarget)
+    images.forEach((image) => {
+      formData.append('images', image.file) // Envía el archivo original
+    })
     const respose = await fetch('http://localhost:3000/api/productos', {
       method: 'POST',
       body: formData,
@@ -89,8 +107,8 @@ export default function CreateForm({ categorias }: { categorias: any[] }) {
             <span>Volver</span>
           </Button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-5 place-items-start">
-          <Card className="md:col-span-3 w-full">
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-5 place-items-start">
+          <Card className="xl:col-span-2 w-full">
             <CardHeader>
               <CardTitle className="font-medium text-lg">
                 Datos Producto
@@ -146,58 +164,104 @@ export default function CreateForm({ categorias }: { categorias: any[] }) {
               </div>
             </CardContent>
           </Card>
-          <Card className="md:col-span-2 w-full">
+          <Card className="xl:col-span-3 w-full">
             <CardHeader>
               <CardTitle className="font-medium text-lg">
                 Imagenes del producto
               </CardTitle>
             </CardHeader>
             <CardContent className="w-full ">
-              <div className="px-8 flex flex-col gap-5">
-                <Carousel className="">
-                  <CarouselContent>
-                    <CarouselItem className="basis-1/3">
-                      <div className=" ">
-                        <img
-                          src="/placeholder.svg"
-                          className="object-cover"
-                          alt=""
-                          height={80}
-                          width={200}
-                        />
-                      </div>
-                    </CarouselItem>
-                    <CarouselItem className="basis-1/3">
-                      <div className=" ">
-                        <img
-                          src="/placeholder.svg"
-                          className="object-cover"
-                          alt=""
-                          height={80}
-                          width={200}
-                        />
-                      </div>
-                    </CarouselItem>
-                    <CarouselItem className="basis-1/3">
-                      <div className=" ">
-                        <img
-                          src="/placeholder.svg"
-                          className="object-cover"
-                          alt=""
-                          height={80}
-                          width={200}
-                        />
-                      </div>
-                    </CarouselItem>
+              <div className="px-8 flex flex-col gap-5 w-full">
+                <Carousel
+                  opts={{
+                    align: 'start',
+                  }}
+                >
+                  <CarouselContent className="-ml-4">
+                    {images.length > 0 ? (
+                      images.map((imagen, index) => (
+                        <CarouselItem
+                          key={index}
+                          className="basis-1/3 h-[250px]"
+                        >
+                          <div className="h-[250px]">
+                            <img
+                              className="object-cover aspect-[1/2] h-full w-full "
+                              src={imagen.preview}
+                              alt={`Imagen ${index + 1}`}
+                            />
+                          </div>
+                        </CarouselItem>
+                      ))
+                    ) : (
+                      <Fragment>
+                        <CarouselItem key={1} className="basis-1/3">
+                          <div className=" ">
+                            <img
+                              src="/placeholder.svg"
+                              className="object-cover"
+                              alt=""
+                              height={80}
+                              width={200}
+                            />
+                          </div>
+                        </CarouselItem>
+                        <CarouselItem key={2} className="basis-1/3">
+                          <div className=" ">
+                            <img
+                              src="/placeholder.svg"
+                              className="object-cover"
+                              alt=""
+                              height={80}
+                              width={200}
+                            />
+                          </div>
+                        </CarouselItem>
+                        <CarouselItem key={3} className="basis-1/3">
+                          <div className=" ">
+                            <img
+                              src="/placeholder.svg"
+                              className="object-cover"
+                              alt=""
+                              height={80}
+                              width={200}
+                            />
+                          </div>
+                        </CarouselItem>
+                        <CarouselItem key={4} className="basis-1/3">
+                          <div className=" ">
+                            <img
+                              src="/placeholder.svg"
+                              className="object-cover"
+                              alt=""
+                              height={80}
+                              width={200}
+                            />
+                          </div>
+                        </CarouselItem>
+                      </Fragment>
+                    )}
+
                     <CarouselPrevious />
                     <CarouselNext />
                   </CarouselContent>
                 </Carousel>
-                <div>
-                  <Button className="space-x-3" type="button">
+                <div className="flex">
+                  <input
+                    hidden
+                    type="file"
+                    name=""
+                    id="_imagen"
+                    multiple
+                    onChange={handleImageUpload}
+                  />
+                  <label
+                    htmlFor="_imagen"
+                    className="bg-black px-3 py-2 rounded-md text-white w-auto flex items-center gap-2 cursor-pointer"
+                  >
                     <span>Subir Imagen</span>
                     <LucideUpload size={18} />
-                  </Button>
+                  </label>
                 </div>
               </div>
               {/* <div className="bg-white  rounded-xl flex gap-2 place-items-center">
@@ -221,7 +285,7 @@ export default function CreateForm({ categorias }: { categorias: any[] }) {
               </div> */}
             </CardContent>
           </Card>
-          <Card className="md:col-span-3 w-full">
+          <Card className="xl:col-span-3 w-full">
             <CardHeader>
               <CardTitle className="font-medium text-lg">
                 Detalles del Producto

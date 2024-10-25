@@ -6,6 +6,7 @@ export async function GET(req: Request) {
     const data = await prisma.producto.findMany({
       select: {
         id: true,
+
         categoria: {
           select: {
             id: true,
@@ -16,6 +17,11 @@ export async function GET(req: Request) {
         nombre: true,
         precio: true,
         descripcion: true,
+        Imagenes: {
+          select: {
+            url: true,
+          },
+        },
         Artesano: {
           select: {
             usuario: {

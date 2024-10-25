@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 async function main() {
-  /* await prisma.estado.create({
+  await prisma.estado.create({
     data: {
       descripcion: 'activo',
     },
@@ -11,7 +11,7 @@ async function main() {
     data: {
       descripcion: 'inactivo',
     },
-  }) */
+  })
   await prisma.categoria.createMany({
     data: [
       {
@@ -78,6 +78,25 @@ async function main() {
       },
       rol: 'ADMINISTRADOR',
       password: bcrypt.hashSync('Admin123', 10),
+    },
+  })
+  await prisma.artesano.create({
+    data: {
+      usuario: {
+        create: {
+          correoelectronico: 'artesando@mail.com',
+          persona: {
+            create: {
+              nombres: 'jose',
+              primerapellido: 'aguilar',
+              segundoapellido: 'sanjinez',
+              nrodocumento: 421872,
+            },
+          },
+          rol: 'ARTESANO',
+          password: bcrypt.hashSync('Admin123', 10),
+        },
+      },
     },
   })
 }

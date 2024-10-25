@@ -86,7 +86,7 @@ model Artesano {
   comunidad   Comunidad? @relation(fields: [comunidadId], references: [id])
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
-  comunidadId Int
+  comunidadId Int?
 }
 
 model Comunidad {
@@ -142,6 +142,18 @@ model Producto {
   clienteId     Int?
   OrdenItems    OrdenItems[]
   AlmacenItem   AlmacenItem[]
+  Imagenes      Imagen[]
+}
+
+model Imagen {
+  id         Int       @id @default(autoincrement())
+  url        String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  estado     Estado?   @relation(fields: [estadoId], references: [id])
+  estadoId   Int?      @default(1)
+  Producto   Producto? @relation(fields: [productoId], references: [id])
+  productoId Int?
 }
 
 model DetalleProducto {
@@ -212,6 +224,7 @@ model Estado {
   Delivery        Delivery[]
   Comunidad       Comunidad[]
   AlmacenItem     AlmacenItem[]
+  Imagen          Imagen[]
 }
 
 model Almacen {

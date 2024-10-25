@@ -5,13 +5,17 @@ import { z } from 'zod'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/auth'
-
+import formidable from 'formidable'
+import { writeFile } from 'fs/promises'
+import path from 'path'
+import { File } from 'buffer'
 export async function GET(req: Request) {
   const session = await getSession()
 
   if (!session) {
     return NextResponse.json([])
   }
+
   try {
     if (session && session.rol === 'ARTESANO') {
       const data = await prisma.producto.findMany({
@@ -70,13 +74,43 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const session = await getSession()
-
-  if ((session && session.rol != 'ARTESANO') || !session) {
+  if (!session) {
+    return NextResponse.json('no tiene sesion')
+  }
+  /* if ((session && session.rol != 'ARTESANO') || !session) {
     return NextResponse.json('no puede crear un producto con su ROL')
+  } */
+  const data = await req.formData()
+  if (!data.get('images')) {
+    return NextResponse.json('no hay imagenes')
+  }
+  const imagenes = data.getAll('images') as unknown as File[]
+  const rutas: string[] = []
+
+  for (const imagen of imagenes) {
+    const bytes = await imagen.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+
+    // Formatea la fecha de una manera adecuada para el nombre del archivo
+    const f = new Date()
+    const fecha = `${f.getDate()}-${f.getMonth() + 1}-${f.getFullYear()}`
+    const hour = f.getHours()
+    const minute = f.getMinutes()
+    const seconds = f.getSeconds()
+    const mili = f.getMilliseconds()
+
+    const extension = path.extname(imagen.name)
+    const nameimage = `img_${fecha}_${hour}-${minute}-${seconds}-${mili}${extension}`
+    console.log(nameimage)
+
+    const filepath = path.join(process.cwd(), 'public/images', nameimage)
+    rutas.push(filepath)
+
+    // Guardar el archivo
+    await writeFile(filepath, buffer)
   }
 
-  const data = await req.formData()
-
+  /* return NextResponse.json('recibido') */
   const detalles: any[] = []
   const entries = Array.from(data.entries())
   const detallesEntradas = entries.filter(([key]) =>
@@ -115,6 +149,11 @@ export async function POST(req: Request) {
         detalles: {
           createMany: {
             data: [...detalles],
+          },
+        },
+        Imagenes: {
+          createMany: {
+            data: rutas.map((ruta) => ({ url: ruta })),
           },
         },
       },

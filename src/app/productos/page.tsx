@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Lucide_Icon from '@/components/lucide_icono'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
@@ -23,6 +24,12 @@ interface productos {
     id: number
     nombre: string
   }
+  Imagenes: {
+    url: any
+    select: {
+      url: true
+    }
+  }[]
   estado: {
     id: number
     descripcion: string
@@ -299,7 +306,7 @@ export default async function Home() {
               <div className="p-2 bg-[#F2F2F2]">
                 <img
                   className="object-cover"
-                  src="./tallado_madera.png"
+                  src={elem?.Imagenes[0].url.split('public')[1]}
                   alt=""
                 />
               </div>
